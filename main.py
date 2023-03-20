@@ -1,11 +1,50 @@
 from getkey import getkey
+from rich.console import Console
+from rich.markdown import Markdown
+import os
+from datetime import datetime
+
+console = Console()
 
 print("CLI Notes")
+
+def list_notes():
+    notes = []
+    console.print('Notes: ')
+    for file in os.listdir():
+        if file.endswith('.clinote'):
+            note = file.split('.')[0]
+            console.print(note)
+
+def add_note():
+    note_name = input('Type the name of your note or leave it empty for a default name: ')
+    if note_name == "":
+        note_name = str(datetime.now()) + '.clinote'
+    else:
+        if '.clinote' not in note_name:
+            note_name += '.clinote'
+    console.print(f"{note_name} made. You may type the contents of it as you wish:")
+    with open(note_name,'w') as new_note:
+        print("You may enter as many lines as you want. When you are done, enter: \"COMPLETE_NOTE\"")
+        new_line = input("Enter a new line: ")
+        while new_line != "COMPLETE_NOTE":
+            new_line = input("Enter a new line: ")
+            new_note.write(new_line + "\n")
+    print("Note saved successfully! Press any key to continue.")
+
+def view_note():
+    note_name = input('Type the name of the note to view it: ')
+    if '.clinote' not in note_name:
+            note_name += '.clinote'
+    with open(note_name, 'r') as note:
+        for line in note:
+            md = Markdown(line)
+            console.print(md)
 
 class Action():
     command: str
     description: str
-    rel_fn: function
+    rel_fn: None
 
     def __init__(self,command,description,rel_fn):
         self.command = command
@@ -16,21 +55,24 @@ class Action():
         self.rel_fn()
 
 actions = [
-    Action('l','List notes'),
-    Action('n','Add a new note'),
-    Action('d','Delete an existing note'),
-    Action('e','Edit an existing note')
+    Action('l','List notes',list_notes),
+    Action('n','Add a new note',add_note),
+    Action('d','Delete an existing note','delete_note'),
+    Action('e','Edit an existing note','edit_note'),
+    Action('v','View an existing note',view_note),
+    Action('q','Quit program',exit)
 ]
 
 def perform_action(selection):
     for action in actions:
         if action.command == selection:
-            print(action.perform_action)
+            action.perform_action()
 
+while True:
+    console.print("-----------------------------------------------")
+    for action in actions:
+        console.print(f"{action.command} - {action.description}")
 
-for action in actions:
-    print(f"{action.command} - {action.description}")
-
-print("Select an action: ")
-selection = getkey()
-perform_action(selection)
+    console.print("Select an action: ")
+    selection = getkey()
+    perform_action(selection)
