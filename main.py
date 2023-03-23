@@ -9,6 +9,7 @@ console = Console()
 print("CLI Notes")
 
 def list_notes():
+    "Lists all notes"
     notes = []
     console.print('Notes: ')
     for file in os.listdir():
@@ -17,6 +18,7 @@ def list_notes():
             console.print(note)
 
 def add_note():
+    "Adds a note"
     note_name = input('Type the name of your note or leave it empty for a default name: ')
     if note_name == "":
         note_name = str(datetime.now()) + '.clinote'
@@ -33,6 +35,7 @@ def add_note():
     print("Note saved successfully! Press any key to continue.")
 
 def delete_note():
+    "Deletes an existing note"
     note_name = input('Type the name of your note: ')
     while note_name == "":
         note_name = input('Please type the name of your note: ')
@@ -54,6 +57,7 @@ def delete_note():
 
 
 def view_note():
+    "Outputs the contents of a note"
     note_name = input('Type the name of the note to view it: ')
     if '.clinote' not in note_name:
             note_name += '.clinote'
@@ -75,6 +79,7 @@ class Action():
     def perform_action(self):
         self.rel_fn()
 
+# list of possible actions
 actions = [
     Action('l','List notes',list_notes),
     Action('n','Add a new note',add_note),
@@ -85,6 +90,7 @@ actions = [
 ]
 
 def perform_action(selection):
+    "Core function that performs an action given user input"
     for action in actions:
         if action.command == selection:
             action.perform_action()
