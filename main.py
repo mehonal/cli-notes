@@ -32,6 +32,27 @@ def add_note():
             new_note.write(new_line + "\n")
     print("Note saved successfully! Press any key to continue.")
 
+def delete_note():
+    note_name = input('Type the name of your note: ')
+    while note_name == "":
+        note_name = input('Please type the name of your note: ')
+    else:
+        if '.clinote' not in note_name:
+            note_name += '.clinote'
+    console.print(f"{note_name} will be deleted. Are you sure you want to continue? (y/n)")
+    selection = getkey()
+    if selection == 'n':
+        return
+    else:
+        try:
+            os.remove(note_name)
+            console.print(f"{note_name} has successfully been deleted.")
+        except Exception as e:
+            console.print(f"Could not delete \"{note_name}\".")
+            console.print(f"Error: {e}")
+
+
+
 def view_note():
     note_name = input('Type the name of the note to view it: ')
     if '.clinote' not in note_name:
@@ -57,7 +78,7 @@ class Action():
 actions = [
     Action('l','List notes',list_notes),
     Action('n','Add a new note',add_note),
-    Action('d','Delete an existing note','delete_note'),
+    Action('d','Delete an existing note',delete_note),
     Action('e','Edit an existing note','edit_note'),
     Action('v','View an existing note',view_note),
     Action('q','Quit program',exit)
