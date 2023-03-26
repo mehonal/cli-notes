@@ -1,3 +1,5 @@
+Status: Work in progress
+
 This is a basic Python noting application that supports markup aimed to run in CLI.
 
 The project is work-in-progress, hence it should be used with caution.
